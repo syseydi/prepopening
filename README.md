@@ -137,6 +137,19 @@ The backend lives in the `backend/` subfolder. Use **one** of these approaches.
 2. In **Settings** → **Build**, ensure the build command is `npm run build` and start command is `npm start` (or `node dist/server.js`).
 3. Set `JWT_SECRET` in Variables and redeploy.
 
-If the app still shows "Application failed to respond", open **Deploy** → **View logs** and check for build or runtime errors (e.g. missing `dist/`, wrong port, or crash on startup).
+### Troubleshooting: "Application failed to respond"
+
+This usually means the **service that owns the URL** is not responding. Check the following:
+
+1. **Which service has the domain?**  
+   In Railway, open your **project** and look at the **services**. You may have:
+   - A **frontend** service (Next.js from `frontend/`)
+   - A **backend** service (Express API from `backend/`)  
+   Click **prepopening-production** (or your custom domain) and see which **service** it belongs to.  
+   - If the domain is on the **frontend** service: the frontend does **not** serve `/api/journeys`. That route lives on the **backend**. Create a public domain for the **backend** service (Settings → Networking → Generate Domain), then open `https://<backend-domain>/api/journeys`.
+   - If the domain is on the **backend** service: the backend process may be crashing. Go to that service → **Deployments** → latest deploy → **View logs**. Look for `[PrepOpening] Starting server` and `[PrepOpening] API listening on 0.0.0.0:...`. If you see an error or neither line, the app is failing to start; copy that error to fix the cause.
+
+2. **Backend service settings**  
+   For the backend service only: **Settings** → **Source** → **Root Directory** must be `backend`, and (if not using the Dockerfile) build command `npm run build`, start command `npm start`. **Variables**: set `JWT_SECRET`; do **not** set `PORT` (Railway sets it).
 
 For schema and product details, see the `docs/` folder.
