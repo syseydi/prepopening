@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { RequireAuth } from '@/components/RequireAuth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { getApiUrl } from '@/lib/api';
 
 interface Journey {
   id: string;
@@ -27,7 +27,7 @@ export default function JourneysPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/journeys`)
+    fetch(`${getApiUrl()}/api/journeys`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load journeys');
         return res.json();

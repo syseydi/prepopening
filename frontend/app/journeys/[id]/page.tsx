@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { RequireAuth } from '@/components/RequireAuth';
 import { useAuth } from '@/context/AuthContext';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { getApiUrl } from '@/lib/api';
 
 interface JourneyProgress {
   totalNodes: number;
@@ -85,7 +85,7 @@ export default function JourneyDetailPage({ params }: { params: { id: string } }
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/journeys/${params.id}`)
+    fetch(`${getApiUrl()}/api/journeys/${params.id}`)
       .then((res) => {
         if (res.status === 404) {
           setError('Journey not found');
@@ -103,7 +103,7 @@ export default function JourneyDetailPage({ params }: { params: { id: string } }
   }, [params.id]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/journeys/${params.id}/tree`)
+    fetch(`${getApiUrl()}/api/journeys/${params.id}/tree`)
       .then((res) => {
         if (res.status === 404) return [];
         if (!res.ok) throw new Error('Failed to load tree');
@@ -116,7 +116,7 @@ export default function JourneyDetailPage({ params }: { params: { id: string } }
 
   useEffect(() => {
     if (!token || !params.id) return;
-    fetch(`${API_URL}/api/progress/journey/${params.id}`, {
+    fetch(`${getApiUrl()}/api/progress/journey/${params.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => (res.ok ? res.json() : null))

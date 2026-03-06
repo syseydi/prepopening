@@ -152,4 +152,7 @@ This usually means the **service that owns the URL** is not responding. Check th
 2. **Backend service settings**  
    For the backend service only: **Settings** → **Source** → **Root Directory** must be `backend`, and (if not using the Dockerfile) build command `npm run build`, start command `npm start`. **Variables**: set `JWT_SECRET`; do **not** set `PORT` (Railway sets it).
 
+3. **Port mismatch (app listens, proxy doesn’t)**  
+   If logs show `[PrepOpening] API listening on 0.0.0.0:8080` but the site still says "Application failed to respond", the proxy may be targeting the wrong port. In the **backend** service: **Settings** → **Networking** (or the section for your public domain). If you see a **Port** or **Target port** set to e.g. `4000`, clear it or set it to match the port in the logs (e.g. `8080`). Do **not** add a custom `PORT` variable; let Railway inject `PORT` and use that for both the app and the proxy.
+
 For schema and product details, see the `docs/` folder.

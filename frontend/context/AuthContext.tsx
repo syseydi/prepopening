@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { getApiUrl } from '@/lib/api';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 const TOKEN_KEY = 'prepopening_token';
 
 export interface User {
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const fetchMe = useCallback(async (t: string) => {
-    const res = await fetch(`${API_URL}/api/auth/me`, {
+    const res = await fetch(`${getApiUrl()}/api/auth/me`, {
       headers: { Authorization: `Bearer ${t}` },
     });
     if (!res.ok) return null;
@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(
     async (email: string, password: string): Promise<{ error?: string }> => {
       try {
-        const res = await fetch(`${API_URL}/api/auth/login`, {
+        const res = await fetch(`${getApiUrl()}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
@@ -96,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       elo?: number;
     }): Promise<{ error?: string }> => {
       try {
-        const res = await fetch(`${API_URL}/api/auth/register`, {
+        const res = await fetch(`${getApiUrl()}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { RequireAuth } from '@/components/RequireAuth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { getApiUrl } from '@/lib/api';
 
 interface BadgeItem {
   id: string;
@@ -24,7 +24,7 @@ export default function ProfilePage() {
       setBadgesLoading(false);
       return;
     }
-    fetch(`${API_URL}/api/badges/my`, {
+    fetch(`${getApiUrl()}/api/badges/my`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => (res.ok ? res.json() : []))

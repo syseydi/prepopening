@@ -9,7 +9,7 @@ import { Chess } from 'chess.js';
 import { RequireAuth } from '@/components/RequireAuth';
 import { useAuth } from '@/context/AuthContext';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { getApiUrl } from '@/lib/api';
 
 type NodeType = 'line' | 'trap' | 'puzzle' | 'transition';
 
@@ -88,7 +88,7 @@ function TrainingPageContent() {
     async (nodeId: string, correct: boolean) => {
       if (!journeyId || !token) return;
       try {
-        const res = await fetch(`${API_URL}/api/progress/update`, {
+        const res = await fetch(`${getApiUrl()}/api/progress/update`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -121,9 +121,9 @@ function TrainingPageContent() {
     setLoading(true);
     setError(null);
     Promise.all([
-      fetch(`${API_URL}/api/journeys/${journeyId}`).then((r) => (r.ok ? r.json() : null)),
-      fetch(`${API_URL}/api/journeys/${journeyId}/tree`).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${API_URL}/api/progress/review/${journeyId}`, {
+      fetch(`${getApiUrl()}/api/journeys/${journeyId}`).then((r) => (r.ok ? r.json() : null)),
+      fetch(`${getApiUrl()}/api/journeys/${journeyId}/tree`).then((r) => (r.ok ? r.json() : [])),
+      fetch(`${getApiUrl()}/api/progress/review/${journeyId}`, {
         headers: { Authorization: `Bearer ${token}` },
       }).then((r) => (r.ok ? r.json() : [])),
     ])
