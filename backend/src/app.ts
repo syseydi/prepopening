@@ -8,10 +8,34 @@ import trainingRoutes from './routes/training';
 import progressRoutes from './routes/progress';
 import badgesRoutes from './routes/badges';
 
+function corsOrigin(origin: string | undefined, cb: (err: Error | null, origin?: string | false) => void): void {
+  if (!origin) {
+    cb(null, false);
+    return;
+  }
+  const allowed = process.env.FRONTEND_URL;
+  if (allowed && origin === allowed) {
+    cb(null, origin);
+    return;
+  }
+  if (origin === 'http://localhost:3000' || origin.startsWith('http://localhost:')) {
+    cb(null, origin);
+    return;
+  }
+  if (origin.endsWith('.vercel.app')) {
+    cb(null, origin);
+    return;
+  }
+  cb(null, false);
+}
+
 export function createApp(): Express {
   const app = express();
 
-  app.use(cors({ origin: process.env.FRONTEND_URL ?? 'http://localhost:3000' }));
+  app.use(cors({
+    origin: corsOrigin,
+    credentials: true,
+  }));
   app.use(express.json());
 
   app.get('/', (_req: Request, res: Response) => {
