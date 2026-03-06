@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { AuthRequest } from '../middleware/auth';
-import { UserWithoutPassword } from '../models/User';
+import { UserWithoutPassword } from '../models/user';
 import * as userStore from '../data/userStore';
 
 const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production';
