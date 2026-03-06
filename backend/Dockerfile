@@ -1,5 +1,6 @@
 # PrepOpening API — production image for Railway
-FROM node:22-alpine
+# Use slim (Debian) not alpine: bcrypt native bindings fail on Alpine
+FROM node:22-slim
 
 WORKDIR /app
 
