@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { mockJourneys } from '../data/mockJourneys';
-import { sicilianDefenseTree } from '../data/mockOpeningTree';
+import { getTreeForJourney } from '../data/mockOpeningTree';
 
 export function list(_req: Request, res: Response): void {
   res.json(mockJourneys);
@@ -23,8 +23,7 @@ export function getTree(req: Request, res: Response): void {
     res.status(404).json({ error: 'Not found', message: `Journey ${id} not found` });
     return;
   }
-  // Return mock tree for Sicilian Defense (id "1"); empty list for other journeys for now
-  const tree = id === '1' ? sicilianDefenseTree : [];
+  const tree = getTreeForJourney(id);
   res.json(tree);
 }
 

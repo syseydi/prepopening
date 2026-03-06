@@ -116,3 +116,46 @@ export const sicilianDefenseTree: OpeningNode[] = [
     difficulty: 2,
   },
 ];
+
+const ROOT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
+/** Minimal placeholder tree (root + one move) for journeys that don't have full data yet. */
+function minimalTree(journeyId: string, firstMove: string, fenAfter: string): OpeningNode[] {
+  return [
+    {
+      id: `min-${journeyId}-0`,
+      journeyId,
+      parentId: null,
+      moveSAN: '',
+      fen: ROOT_FEN,
+      depth: 0,
+      isRequired: true,
+      nodeType: 'line',
+      explanation: null,
+      difficulty: 1,
+    },
+    {
+      id: `min-${journeyId}-1`,
+      journeyId,
+      parentId: `min-${journeyId}-0`,
+      moveSAN: firstMove,
+      fen: fenAfter,
+      depth: 1,
+      isRequired: true,
+      nodeType: 'line',
+      explanation: null,
+      difficulty: 1,
+    },
+  ];
+}
+
+/** Opening tree for a journey. Sicilian is full; others get a minimal placeholder. */
+export function getTreeForJourney(journeyId: string): OpeningNode[] {
+  if (journeyId === '1') return sicilianDefenseTree;
+  if (journeyId === '2') return minimalTree('2', 'e4', 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
+  if (journeyId === '3') return minimalTree('3', 'e4', 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
+  if (journeyId === '4') return minimalTree('4', 'e4', 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
+  if (journeyId === '5') return minimalTree('5', 'e4', 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
+  if (journeyId === '6') return minimalTree('6', 'd4', 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1');
+  return [];
+}
