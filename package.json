@@ -1,0 +1,10 @@
+{
+  "name": "prepopening",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chess opening training platform",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev"
+  }
+}
