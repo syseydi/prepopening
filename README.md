@@ -121,14 +121,22 @@ Additional backend variables (e.g. `DATABASE_URL`, `FRONTEND_URL`) can be added 
 
 ## Deploying the backend to Railway
 
-The backend lives in the `backend/` subfolder. For Railway to build and run it correctly you must set the **Root Directory** to `backend`.
+The backend lives in the `backend/` subfolder. Use **one** of these approaches.
+
+### Option A: Root Directory + Dockerfile (recommended)
 
 1. In the [Railway dashboard](https://railway.app), open your backend service.
-2. Go to **Settings** → **Source** (or **Service Settings**).
-3. Set **Root Directory** to `backend` (or `/backend`). This makes Railway run `npm ci`, `npm run build`, and `npm start` from the `backend/` folder.
-4. In **Variables**, set at least `JWT_SECRET` (and optionally `PORT`; Railway sets `PORT` automatically).
-5. Redeploy. The API will be available at your Railway URL (e.g. `https://your-app.up.railway.app`). Use `/health` or `/api/journeys` to verify.
+2. **Settings** → **Source** → set **Root Directory** to `backend`.
+3. Railway will detect `backend/Dockerfile` and use it to build and run the API (no need to set build/start commands manually).
+4. **Variables**: set `JWT_SECRET`; leave `PORT` unset (Railway injects it).
+5. Redeploy. Test `https://your-app.up.railway.app/health` and `https://your-app.up.railway.app/api/journeys`.
 
-If Root Directory is left at the repo root, the build/start commands will not find the backend and you may see "Application failed to respond".
+### Option B: Root Directory only (no Dockerfile)
+
+1. Set **Root Directory** to `backend` as above.
+2. In **Settings** → **Build**, ensure the build command is `npm run build` and start command is `npm start` (or `node dist/server.js`).
+3. Set `JWT_SECRET` in Variables and redeploy.
+
+If the app still shows "Application failed to respond", open **Deploy** → **View logs** and check for build or runtime errors (e.g. missing `dist/`, wrong port, or crash on startup).
 
 For schema and product details, see the `docs/` folder.
