@@ -119,4 +119,16 @@ Additional backend variables (e.g. `DATABASE_URL`, `FRONTEND_URL`) can be added 
 4. **Journeys** → pick a journey → **Start Training** to use the review queue and progress.
 5. **Profile** shows user info and Conqueror badges.
 
+## Deploying the backend to Railway
+
+The backend lives in the `backend/` subfolder. For Railway to build and run it correctly you must set the **Root Directory** to `backend`.
+
+1. In the [Railway dashboard](https://railway.app), open your backend service.
+2. Go to **Settings** → **Source** (or **Service Settings**).
+3. Set **Root Directory** to `backend` (or `/backend`). This makes Railway run `npm ci`, `npm run build`, and `npm start` from the `backend/` folder.
+4. In **Variables**, set at least `JWT_SECRET` (and optionally `PORT`; Railway sets `PORT` automatically).
+5. Redeploy. The API will be available at your Railway URL (e.g. `https://your-app.up.railway.app`). Use `/health` or `/api/journeys` to verify.
+
+If Root Directory is left at the repo root, the build/start commands will not find the backend and you may see "Application failed to respond".
+
 For schema and product details, see the `docs/` folder.

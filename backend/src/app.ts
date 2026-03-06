@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 
 import authRoutes from './routes/auth';
@@ -14,6 +14,10 @@ export function createApp(): Express {
   app.use(cors({ origin: process.env.FRONTEND_URL ?? 'http://localhost:3000' }));
   app.use(express.json());
 
+  app.get('/', (_req: Request, res: Response) => {
+    res.json({ service: 'prepopening-api', health: '/health', api: '/api' });
+  });
+
   app.get('/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok', service: 'prepopening-api' });
   });
@@ -27,6 +31,11 @@ export function createApp(): Express {
 
   app.use((_req, res) => {
     res.status(404).json({ error: 'Not found' });
+  });
+
+  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   });
 
   return app;
