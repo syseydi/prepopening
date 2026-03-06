@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
@@ -52,7 +53,7 @@ function getChildren(nodes: OpeningNode[], parentId: string): OpeningNode[] {
   return nodes.filter((n) => n.parentId === parentId);
 }
 
-export default function TrainingPage() {
+function TrainingPageContent() {
   const searchParams = useSearchParams();
   const journeyId = searchParams.get('journey');
 
@@ -354,8 +355,10 @@ export default function TrainingPage() {
                 <Chessboard
                   options={{
                     position: currentFen,
-                    onPieceDrop: ({ sourceSquare, targetSquare }) =>
-                      handlePieceDrop(sourceSquare, targetSquare),
+                    onPieceDrop: ({ sourceSquare, targetSquare }) => {
+                      if (!sourceSquare || !targetSquare) return false;
+                      return handlePieceDrop(sourceSquare, targetSquare);
+                    },
                     boardOrientation: journey.side === 'white' ? 'white' : 'black',
                   }}
                 />
@@ -368,5 +371,13 @@ export default function TrainingPage() {
         </div>
       </div>
     </RequireAuth>
+  );
+}
+
+export default function TrainingPage() {
+  return (
+    <Suspense fallback={<div>Loading training...</div>}>
+      <TrainingPageContent />
+    </Suspense>
   );
 }
